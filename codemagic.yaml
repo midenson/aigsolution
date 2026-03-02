@@ -6,22 +6,33 @@ workflows:
       node: 20
       java: 17
     scripts:
+      # Step 0: Clean Gradle cache to prevent corrupted JAR errors
+      - name: Clean Gradle cache
+        script: |
+          rm -rf $HOME/.gradle/caches/
+
+      # Step 1: Install Node dependencies
       - name: Install dependencies
         script: |
           npm install
 
+      # Step 2: Build Next.js web app
       - name: Build web app
         script: |
           npm run build
 
+      # Step 3: Sync Capacitor Android project
       - name: Sync Capacitor
         script: |
           npx cap sync android
 
+      # Step 4: Build Android APK
       - name: Build Android APK
         script: |
           cd android
-          ./gradlew assembleDebug
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
 
+    # Step 5: Save APK artifact
     artifacts:
       - android/app/build/outputs/**/*.apk
