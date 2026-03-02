@@ -2,16 +2,18 @@ workflows:
   android-apk:
     name: Android APK Build
     max_build_duration: 60
+
     environment:
       node: 20
       java: 17
+
     scripts:
       # Step 0: Ensure gradlew is executable
       - name: Fix gradlew permissions
         script: |
           chmod +x android/gradlew
 
-      # Step 1: Clean Gradle cache (forces fresh download of all jars)
+      # Step 1: Clean Gradle cache (optional but safe)
       - name: Clean Gradle cache
         script: |
           rm -rf $HOME/.gradle/caches/
@@ -23,6 +25,7 @@ workflows:
           npm install --legacy-peer-deps
 
       # Step 3: Build web app
+      # Make sure this succeeds locally before CI
       - name: Build web app
         script: |
           npm run build
@@ -32,11 +35,11 @@ workflows:
         script: |
           npx cap sync android
 
-      # Step 5: Build Android APK
+      # Step 5: Build Android APK (FIXED)
       - name: Build Android APK
         script: |
           cd android
-          ./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs="-Xmx1536m -Djava.io.tmpdir=$HOME/.gradle/tmp"
+          ./gradlew assembleDebug --no-daemon -Djava.io.tmpdir=/tmp
 
     artifacts:
       - android/app/build/outputs/**/*.apk
