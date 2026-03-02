@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">aigsolution</string>
+    <string name="title_activity_main">aigsolution</string>
+    <string name="package_name">com.aigsolution.app</string>
+    <string name="custom_url_scheme">com.aigsolution.app</string>
+</resources>
